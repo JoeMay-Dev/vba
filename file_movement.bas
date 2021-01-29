@@ -23,7 +23,6 @@ Sub FilesAndFolders()
     End If
     
     Set fso = Nothing
-         
     
 End Sub
 
@@ -35,14 +34,14 @@ Sub CopyExcelFiles(startFolderPath As String)
     
     Set oldFolder = fso.GetFolder(startFolderPath)
     
-        For Each fil In oldFolder.Files
-        
+    For Each fil In oldFolder.Files
+    
         If Left(fso.GetExtensionName(fil.Path), 3) = "xls" Then
              fil.Copy newFolderPath & "\" & fil.Name
         End If
     
     Next fil
-    
+
     For Each subfold In oldFolder.SubFolders
         Call CopyExcelFiles(subfold.Path)
     Next subfold
