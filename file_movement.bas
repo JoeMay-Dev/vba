@@ -1,55 +1,52 @@
-Attribute VB_Name = "Module1"
+Attribute VB_Name = "file_movement"
 'Enable Microsoft Scripting Runtime
 Option Explicit
-Sub UsingTheScriptingRuntimeLibrary()
-
-    Dim fso As Scripting.FileSystemObject
-    Dim fil As Scripting.File
-    Dim oldFolder As Scripting.Folder
-    Dim newFolderPath As String
+Private fso As Scripting.FileSystemObject
+Private newFolderPath As String
+Sub FilesAndFolders()
+    
     Dim oldFolderPath As String
     
-    
     newFolderPath = Environ("UserProfile") & "\vba\New_Folder"
-    oldFolderPath = Environ("UserProfile") & "\vba\VBA Files\Test"
+    oldFolderPath = Environ("UserProfile") & "\vba\VBA Files"
     
     Set fso = New Scripting.FileSystemObject
     
     If fso.FolderExists(oldFolderPath) Then
-        Set oldFolder = fso.GetFolder(oldFolderPath)
         
         If Not fso.FolderExists(newFolderPath) Then
             fso.CreateFolder (newFolderPath)
         End If
-        
-        For Each fil In oldFolder.Files
-            
-            If Left(fso.GetExtensionName(fil.Path), 3) = "xls" Then
-                 fil.Copy newFolderPath & "\" & fil.Name
-            End If
-        
-        Next fil
+                
+        CopyExcelFiles oldFolderPath
         
     End If
-     
-    
-    
-'    If fso.FileExists(oldFolderPath & "\move_this.xlsx") Then
-'
-'        Set fil = fso.GetFile(oldFolderPath & "\move_this.xlsx")
-'
-'        If fil.Size > 6000 Then
-'            fil.Copy newFolderPath & "\" & fil.Name
-'        End If
-'
-'        fso.CopyFile _
-'            Source:=oldFolderPath & "\move_this.xlsx" _
-'            , Destination:=newFolderPath & "\move_this_copy.xlsx"
-'    End If
     
     Set fso = Nothing
          
     
+End Sub
+
+Sub CopyExcelFiles(startFolderPath As String)
+
+    Dim fil As Scripting.File
+    Dim subfold As Scripting.Folder
+    Dim oldFolder As Scripting.Folder
+    
+    Set oldFolder = fso.GetFolder(startFolderPath)
+    
+        For Each fil In oldFolder.Files
+        
+        If Left(fso.GetExtensionName(fil.Path), 3) = "xls" Then
+             fil.Copy newFolderPath & "\" & fil.Name
+        End If
+    
+    Next fil
+    
+    For Each subfold In oldFolder.SubFolders
+        Call CopyExcelFiles(subfold.Path)
+    Next subfold
+
 End Sub
 
 
