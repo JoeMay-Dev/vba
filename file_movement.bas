@@ -3,7 +3,7 @@ Attribute VB_Name = "file_movement"
 Option Explicit
 Private fso As Scripting.FileSystemObject
 Private newFolderPath As String
-Sub FilesAndFolders()
+Sub Create_Folder_Copy_Files()
     
     Dim oldFolderPath As String
     
@@ -36,14 +36,14 @@ Sub CopyExcelFiles(startFolderPath As String)
     
     For Each fil In oldFolder.Files
     
-        If Left(fso.GetExtensionName(fil.Path), 3) = "xls" Then
+        If Left(fso.GetExtensionName(fil.path), 3) = "xls" Then
              fil.Copy newFolderPath & "\" & fil.Name
         End If
     
     Next fil
 
     For Each subfold In oldFolder.SubFolders
-        Call CopyExcelFiles(subfold.Path)
+        Call CopyExcelFiles(subfold.path)
     Next subfold
 
 End Sub
